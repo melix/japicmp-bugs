@@ -29,7 +29,7 @@ task japicmp(type: me.champeau.gradle.JapicmpTask) {
    dependsOn baselineJar, updatedJar
    oldArchive = baselineJar.archivePath
    newArchive = updatedJar.archivePath
-   onlyModified = true
+   onlyModified = false
    failOnModification = true
    txtOutputFile = file("$buildDir/japi.txt")
    doLast {
