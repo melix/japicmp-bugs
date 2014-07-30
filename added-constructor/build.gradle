@@ -1,0 +1,38 @@
+buildscript {
+   repositories {
+      jcenter()
+   }
+   dependencies {
+       classpath 'me.champeau.gradle:japicmp-gradle-plugin:0.1.0'
+   }
+}
+
+apply plugin: 'java'
+
+sourceSets {
+   baseline.java.srcDir 'src/baseline/java'
+   updated.java.srcDir 'src/updated/java'
+}
+
+task baselineJar(type:Jar) {
+   baseName = 'baseline'
+   from sourceSets.baseline.output
+}
+
+task updatedJar(type:Jar) {
+   baseName = 'updated'
+   from sourceSets.updated.output
+}
+
+
+task japicmp(type: me.champeau.gradle.JapicmpTask) {
+   dependsOn baselineJar, updatedJar
+   oldArchive = baselineJar.archivePath
+   newArchive = updatedJar.archivePath
+   onlyModified = true
+   failOnModification = true
+   txtOutputFile = file("$buildDir/japi.txt")
+   doLast {
+      println(txtOutputFile.text)
+   }
+}
